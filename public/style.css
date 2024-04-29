@@ -1,0 +1,80 @@
+body {
+    font-family: "Helvetica Neue";
+    background-color: #87cefa;
+    color: black;
+  }
+  
+  h1 {
+    margin: 16px auto;
+    text-align: center;
+    font-size: 4em;
+  }
+  
+  #statusMessage {
+    margin: 10px auto;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5em;
+  }
+  
+  button {
+    text-align: center;
+    background-color: #ff8c00;
+    color: #000000;
+    font-size: 24px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border: 1px solid gray;
+    display: block;
+    margin: 20px auto;
+  }
+  
+  button:hover {
+    background-color: orange;
+  }
+  
+  #gameBoard {
+    width: 300px;
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    /*grid-gap: 10px;*/
+    margin: 0 auto;
+    border: 4px solid black;
+  }
+  
+  .cell {
+    width: 100px;
+    height: 100px;
+    background-color: pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    cursor: pointer;
+    border: 4px solid black;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  .cell.x, .cell.o {
+    font-weight: bold;
+    color: black; 
+    font-size: 8em;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+  }
+  
+
+  #score {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px auto;
+  }
+
+  
+  #scoreX, #scoreO {
+    font-weight: bold;
+    color: #ff8c00; 
+  }
+  
