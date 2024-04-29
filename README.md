@@ -10,7 +10,7 @@ I suggest you tackle the assignment in parts, meaning start with a simple protot
 
 Sample Design
 
-![Alt Text](Tic_Tac_Toe.png)
+<img src="Tic_Tac_Toe.png" alt="Tic Tac Toe Image" width="300" height="200">
 
 You can use the sample HTML Download HTMLand CSS Download CSSfiles. You have to implement the main.js and add the extra features outlined.  
 
