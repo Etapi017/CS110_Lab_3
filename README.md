@@ -10,6 +10,8 @@ I suggest you tackle the assignment in parts, meaning start with a simple protot
 
 Sample Design
 
+![Alt Text](Tic_Tac_Toe.png)
+
 You can use the sample HTML Download HTMLand CSS Download CSSfiles. You have to implement the main.js and add the extra features outlined.  
 
 
