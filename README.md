@@ -10,7 +10,7 @@ I suggest you tackle the assignment in parts, meaning start with a simple protot
 
 Sample Design
 
-<img src="Tic_Tac_Toe.png" alt="Tic Tac Toe Image" width="300" height="200">
+<img src="Tic_Tac_Toe.png" alt="Tic Tac Toe Image" width="883" height="703">
 
 You can use the sample HTML Download HTMLand CSS Download CSSfiles. You have to implement the main.js and add the extra features outlined.  
 

@@ -1,90 +1,123 @@
-const statusMessage = document.getElementById('statusMessage');
-const gameBoard = document.getElementById('gameBoard');
-const cells = document.querySelectorAll('.cell');
-const scoreXElement = document.getElementById('scoreX');
-const scoreOElement = document.getElementById('scoreO');
-let currentPlayer = 'X';
-let gameActive = true;
-let gameState = ['', '', '', '', '', '', '', '', ''];
-let scoreX = 0;
-let scoreO = 0;
+//DOM Elements
+const statusMessage = document.getElementById('statusMessage'); // Element to display game status
+const cells = document.querySelectorAll('.cell'); // All cells of the game board
+const scoreXElement = document.getElementById('scoreX'); // Element to display X player's score
+const scoreOElement = document.getElementById('scoreO'); // Element to display O player's score
 
+let currentPlayer = 'X';
+let gameActive = true;// Game activity indicator
+let gameState = Array(9).fill('');//Game board
+let scoreX = 0;//Score for X
+let scoreO = 0;//Score for O
+
+//Display when a cell is clicked
 function handleCellPlayed(clickedCell, clickedCellIndex) {
     gameState[clickedCellIndex] = currentPlayer;
     clickedCell.innerHTML = currentPlayer;
+    clickedCell.classList.add(currentPlayer);
 }
 
+//To switch the player and check if it's the computer's turn
 function handlePlayerChange() {
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';//Switch player
     statusMessage.innerText = `It's ${currentPlayer}'s turn`;
-}
-
-function updateScore() {
-    scoreXElement.textContent = scoreX;
-    scoreOElement.textContent = scoreO;
-}
-
-function handleWin(player) {
-    statusMessage.innerText = `${player} wins!`;
-    if (player === 'X') {
-        scoreX++;
-    } else {
-        scoreO++;
+    if (currentPlayer === 'O' && gameActive) {
+        setTimeout(computerMove, 500); //Delay for computer move
     }
-    updateScore();
-    gameActive = false;
 }
 
+//Checks if there is a winner or the game is a draw
 function checkWin() {
-    const winConditions = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8],  // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],  // Columns
-        [0, 4, 8], [2, 4, 6]             // Diagonals
+    const winConditions = [//Winning combinations
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
     ];
+    
     let roundWon = false;
-    for (let i = 0; i < winConditions.length; i++) {
-        const winCondition = winConditions[i];
-        let a = gameState[winCondition[0]];
-        let b = gameState[winCondition[1]];
-        let c = gameState[winCondition[2]];
-        if ([a, b, c].includes('')) continue;
-        if (a === b && b === c) {
-            roundWon = true;
-            handleWin(currentPlayer);
+    for (const condition of winConditions) {//Checks winning condition
+        const [a, b, c] = condition;
+        if (gameState[a] && gameState[a] === gameState[b] && gameState[a] === gameState[c]) {
+            roundWon = true; //Winner
             break;
         }
     }
-    if (!roundWon && !gameState.includes('')) {
-        statusMessage.innerText = `Game ended in a draw!`;
-        gameActive = false;
-    }
-    if (!roundWon && gameActive) {
-        handlePlayerChange();
-    }
-}
 
-function handleCellClick(clickedCellEvent) {
-    const clickedCell = clickedCellEvent.target;
-    const clickedCellIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
-    if (gameState[clickedCellIndex] !== '' || !gameActive) {
+    if (roundWon) {//If there is a winner
+        statusMessage.innerText = `${currentPlayer} Wins!`;
+        updateScores();//Updates scores
+        gameActive = false;// Game stops
         return;
     }
-    handleCellPlayed(clickedCell, clickedCellIndex);
-    checkWin();
+
+    if (!gameState.includes('')) {//If all cells are full
+        statusMessage.innerText = 'Game ended in a draw!';
+        gameActive = false;//Game stops
+        return;
+    }
+
+    handlePlayerChange();//Switching player's turn
 }
 
+// AI chooses a random move
+function computerMove() {
+    let availableCells = gameState.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);//Get available spaces
+    
+    if (availableCells.length > 0) {//If there are open spaces
+        const randomCellIndex = availableCells[Math.floor(Math.random() * availableCells.length)];// Randomly choose a cell
+        handleCellPlayed(cells[randomCellIndex], randomCellIndex);
+        checkWin(); // Check if there is a winner
+    }
+}
+
+//Cell click
+cells.forEach((cell, index) => {
+    cell.addEventListener('click', function() {
+        if (gameState[index] !== '' || !gameActive || currentPlayer === 'O') {
+            return; // Do nothing if space is taken, game is over, or it's the computer's turn
+        }
+        handleCellPlayed(cell, index);
+        checkWin();//Check if there is a winner
+    });
+});
+
+//Reset the game
+function resetGame() {
+    gameState.fill('');//Clears game board
+    cells.forEach(cell => {
+        cell.innerHTML = ''; // Clear display
+        cell.classList.remove('X', 'O');
+    });
+    gameActive = true; //Game goes active
+    currentPlayer = 'X';
+    statusMessage.innerText = "It's X's turn";
+    if (currentPlayer === 'O') {
+        setTimeout(computerMove, 500);//If it's computer's turn, delay
+    }
+}
+
+// Update player scores
+function updateScores() {
+    if (currentPlayer === 'X') {
+        scoreX++;//Add 1 to X player's score
+    } else {
+        scoreO++;//Add 1 to O player's score
+    }
+    scoreXElement.innerText = scoreX;//Update X score
+    scoreOElement.innerText = scoreO;//Update O score
+}
+
+//Start a new game
 function newGame() {
-    gameActive = true;
+    gameActive = true;//Game goes active
     currentPlayer = 'X';
     gameState = ['', '', '', '', '', '', '', '', ''];
-    statusMessage.innerText = `It's ${currentPlayer}'s turn`;
-    cells.forEach(cell => cell.innerHTML = '');
+    statusMessage.innerText = `It's ${currentPlayer}'s turn`;//Update status message
+    cells.forEach(cell => cell.innerHTML = '');//Clear board
 }
 
-function resetGame() {
-    newGame();
-}
+document.getElementById('newGame').addEventListener('click', newGame); // New game button
+document.getElementById('resetGame').addEventListener('click', resetGame); // Reset game button
 
-cells.forEach(cell => cell.addEventListener('click', handleCellClick));
-updateScore();
-newGame();
+//Initialize a new game when the page loads
+newGame();//Initializes the game
